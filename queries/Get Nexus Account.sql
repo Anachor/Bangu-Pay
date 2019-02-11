@@ -1,0 +1,1 @@
+select * from nexusaccounts where phone_no = ?
