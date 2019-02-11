@@ -1,6 +1,7 @@
 package Frontend;
 
 import Backend.UserSession;
+import Common.Alerter;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -29,18 +30,9 @@ public class LoginController {
         }
         else {
             System.out.println("Unsuccessful");
-            showAlert(Alert.AlertType.ERROR, signInButton.getScene().getWindow(),
+            Alerter.showAlert(Alert.AlertType.ERROR, signInButton.getScene().getWindow(),
                     " Login Unsuccessful", "Username and Password don't match");
         }
-    }
-
-    private void showAlert(Alert.AlertType alertType, Window owner, String title, String message) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.initOwner(owner);
-        alert.show();
     }
 }
 

@@ -1,9 +1,16 @@
 package Backend;
 
+import java.io.InputStream;
+import java.io.Reader;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.net.URL;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
+
 import Common.Card;
 
 
@@ -90,5 +97,22 @@ public class UserSession {
         return cards;
     }
 
+    public ResultSet SQLQuery(String SQL) throws SQLException {
+        PreparedStatement ps = conn.prepareStatement(SQL);
+        System.out.println(ps);
+        ResultSet rs = ps.executeQuery();
+        return rs;
+    }
+
+    public static void main(String[] args) throws SQLException {
+        UserSession session = new UserSession();
+        String sql = ("select * from corporations where registration_no < ?;");
+        PreparedStatement ps = session.conn.prepareStatement(sql);
+        System.out.println(ps);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            System.out.println(rs.getString(1) + rs.getString(2) + rs.getString(3) + rs.getString(4));
+        }
+    }
 
 }
