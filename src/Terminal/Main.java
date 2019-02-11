@@ -34,7 +34,7 @@ public class Main extends Application {
         try {
             Parent root = FXMLLoader.load(Main.class.getResource(fxml));
             primaryStage.setTitle("Nexus Pay");
-            Scene scene = new Scene(root, 720, 576);
+            Scene scene = new Scene(root, 720, 500);
             scenes.push(scene);
             primaryStage.setScene(scene);
             primaryStage.show();
