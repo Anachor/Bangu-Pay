@@ -8,6 +8,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.Stack;
 
 public class Main extends Application {
@@ -20,7 +22,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         scenes = new Stack<Scene>();
         this.primaryStage = primaryStage;
-        setScene("login.fxml");
+        setScene("QueryView.fxml");
     }
 
     public static void main(String[] args) {
@@ -32,7 +34,7 @@ public class Main extends Application {
         try {
             Parent root = FXMLLoader.load(Main.class.getResource(fxml));
             primaryStage.setTitle("Nexus Pay");
-            Scene scene = new Scene(root, 640, 480);
+            Scene scene = new Scene(root, 720, 576);
             scenes.push(scene);
             primaryStage.setScene(scene);
             primaryStage.show();
