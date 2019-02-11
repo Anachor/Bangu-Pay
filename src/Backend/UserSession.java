@@ -1,25 +1,35 @@
 package Backend;
 
-import java.io.InputStream;
-import java.io.Reader;
+import java.io.*;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import Common.Card;
 
 
 public class UserSession {
 
-    private final String url = "jdbc:postgresql://localhost/NexusPay";
-    private final String user = "postgres";
-    private final String password = "123";
+    private static String url;
+    private static String user;
+    private static String password;
     private Connection conn;
+
+    static {
+        String filename = "src/Backend/config.txt";
+        try {
+            File file = new File(filename);
+            Scanner sc  = new Scanner(file);
+            url = sc.nextLine();
+            user = sc.nextLine();
+            password = sc.nextLine();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
 
     private String phone;
 
