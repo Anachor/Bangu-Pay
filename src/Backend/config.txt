@@ -1,0 +1,3 @@
+jdbc:postgresql://localhost/NexusPay
+postgres
+123

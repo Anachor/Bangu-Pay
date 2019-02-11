@@ -26,15 +26,15 @@ public class QueryViewController implements Initializable {
     @FXML
     TableView<List<StringProperty>> resultsTable;
     @FXML
-    ListView<Hyperlink> simpleQuery;
+    ListView simpleQuery;
     @FXML
-    ListView <Hyperlink> complexQuery;
+    ListView  complexQuery;
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         codeArea.setText("Write SQL here");
-        //addQueries();
+        addQueries();
     }
 
     @FXML
@@ -74,6 +74,16 @@ public class QueryViewController implements Initializable {
     private void addQueries() {
         List<SQLQuery> queries = new ArrayList<>();
         queries.add(new SQLQuery("Show Services", "select * from services;"));
-        queries.add(new SQLQuery("Show Persons", "select * from persons;"));
+        queries.add(new SQLQuery("Show Billers", "select * from billers where nexus_id = 45;"));
+        queries.add(new SQLQuery("Get Nexus Account", "select * from nexusaccounts where phone_no = ?"));
+
+        for (SQLQuery query: queries) {
+            Button button = new Button();
+            button.setText(query.Name);
+            button.setOnAction( e -> {
+                codeArea.setText(query.SQL);
+            });
+            simpleQuery.getItems().add(button);
+        }
     }
 }
