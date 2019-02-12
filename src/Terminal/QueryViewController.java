@@ -22,7 +22,7 @@ public class QueryViewController implements Initializable {
     @FXML
     TextArea codeArea;
     @FXML
-    Hyperlink runHyperlink;
+    Button runButton;
     @FXML
     TableView<List<StringProperty>> resultsTable;
     @FXML
@@ -42,6 +42,7 @@ public class QueryViewController implements Initializable {
     public void RunQuery() {
         try {
             String SQL = codeArea.getText();
+
             ResultSet rs = Main.session.SQLQuery(SQL);
             ResultSetMetaData rsmd = rs.getMetaData();
             resultsTable.getColumns().clear();
@@ -66,8 +67,8 @@ public class QueryViewController implements Initializable {
             resultsTable.setItems(data);
 
         } catch (SQLException e) {
-            Alerter.showAlert(Alert.AlertType.ERROR, runHyperlink.getScene().getWindow(),
-                    "Invalid SQLQuery", "The given SQL SQLQuery is invalid");
+            Alerter.showAlert(Alert.AlertType.ERROR, runButton.getScene().getWindow(),
+                    "Invalid SQLQuery", "The given SQL Query is invalid");
             e.printStackTrace();
         }
     }
@@ -80,7 +81,7 @@ public class QueryViewController implements Initializable {
                 "select * from services;"));
         queries.add(new SQLQuery("Show Billers",
                 "select * from billers \n" + "where nexus_id = '01913373406';"));
-        queries.add(new SQLQuery("Get Nexus Account",
+        queries.add(new SQLQuery("Get Nexus Account For Card",
                 "select * from nexusaccounts where phone_no = '01913373406'"));
         queries.add(new SQLQuery("Show Offers",
                 "select * from offers where card_no = 12"));
