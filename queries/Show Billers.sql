@@ -1,1 +1,1 @@
-select * from billers where nexus_id = '01913373406;
+select * from billers where phone_no = '01521433575';
