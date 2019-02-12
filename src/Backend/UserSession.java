@@ -110,13 +110,14 @@ public class UserSession {
     public ResultSet SQLQuery(String SQL) throws SQLException {
         PreparedStatement ps = conn.prepareStatement(SQL);
         System.out.println(ps);
-        ResultSet rs = ps.executeQuery();
+        ps.execute();
+        ResultSet rs = ps.getResultSet();
         return rs;
     }
 
     public static void main(String[] args) throws SQLException {
         UserSession session = new UserSession();
-        String sql = ("select * from corporations where registration_no < ?;");
+        String sql = ("select ");
         PreparedStatement ps = session.conn.prepareStatement(sql);
         System.out.println(ps);
         ResultSet rs = ps.executeQuery();

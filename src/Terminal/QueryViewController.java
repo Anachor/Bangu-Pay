@@ -52,6 +52,7 @@ public class QueryViewController implements Initializable {
 
 
             ResultSet rs = Main.session.SQLQuery(SQL);
+            if(rs == null)  return;
             ResultSetMetaData rsmd = rs.getMetaData();
             resultsTable.getColumns().clear();
 
