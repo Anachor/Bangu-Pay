@@ -31,6 +31,8 @@ public class QueryViewController implements Initializable {
     ListView  complexQuery;
     @FXML
     ListView functions;
+    @FXML
+    ListView triggers;
 
 
     @Override
@@ -39,6 +41,7 @@ public class QueryViewController implements Initializable {
         addSimpleQueries();
         addComplexQueries();
         addFunction();
+        addTriggers();
     }
 
     @FXML
@@ -112,13 +115,25 @@ public class QueryViewController implements Initializable {
     }
 
     private void addFunction() {
-        for (SQLQuery query: Queries.Functions()) {
+        for (SQLQuery query: Queries.getFunctions()) {
             Hyperlink hyperlink = new Hyperlink();
             hyperlink.setText(query.Name);
             hyperlink.setOnAction(e -> {
                 codeArea.setText(query.SQL);
             });
             functions.getItems().add(hyperlink);
+        }
+    }
+
+
+    private void addTriggers() {
+        for (SQLQuery query: Queries.getTriggers()) {
+            Hyperlink hyperlink = new Hyperlink();
+            hyperlink.setText(query.Name);
+            hyperlink.setOnAction(e -> {
+                codeArea.setText(query.SQL);
+            });
+            triggers.getItems().add(hyperlink);
         }
     }
 }
