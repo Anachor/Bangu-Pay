@@ -41,39 +41,41 @@ public class QueryViewController implements Initializable {
     @FXML
     public void RunQuery() {
         try {
-            String SQL = codeArea.getText().trim();
-
-            String[] ss = SQL.split("===");
-            SQL = ss[ss.length-1];
-
-            ss = SQL.split(";");
-            SQL = ss[ss.length-1];
+            String txt = codeArea.getText().trim();
 
 
+            String[] ss = txt.split("===");
+            txt = ss[ss.length-1];
 
-            ResultSet rs = Main.session.SQLQuery(SQL);
-            if(rs == null)  return;
-            ResultSetMetaData rsmd = rs.getMetaData();
-            resultsTable.getColumns().clear();
+            ss = txt.split(";");
 
-            int n = rsmd.getColumnCount();
-            for (int i=1; i<=n; i++) {
-                String name = rsmd.getColumnName(i);
-                TableColumn<List<StringProperty>, String> column = new TableColumn(name);
-                int finalI = i - 1;
-                column.setCellValueFactory(data -> data.getValue().get(finalI));
-                resultsTable.getColumns().add(column);
-            }
+            for (String SQL: ss) {
+                SQL = SQL.trim();
+                if (SQL.equals("")) continue;
+                ResultSet rs = Main.session.SQLQuery(SQL);
+                if (rs == null) continue;
+                ResultSetMetaData rsmd = rs.getMetaData();
+                resultsTable.getColumns().clear();
 
-            ObservableList<List<StringProperty>> data = FXCollections.observableArrayList();
-            while (rs.next()) {
-                List<StringProperty> firstRow = new ArrayList<>();
-                for (int i=1; i<=n; i++) {
-                    firstRow.add(i-1, new SimpleStringProperty(rs.getString(i)));
+                int n = rsmd.getColumnCount();
+                for (int i = 1; i <= n; i++) {
+                    String name = rsmd.getColumnName(i);
+                    TableColumn<List<StringProperty>, String> column = new TableColumn(name);
+                    int finalI = i - 1;
+                    column.setCellValueFactory(data -> data.getValue().get(finalI));
+                    resultsTable.getColumns().add(column);
                 }
-                data.add(firstRow);
+
+                ObservableList<List<StringProperty>> data = FXCollections.observableArrayList();
+                while (rs.next()) {
+                    List<StringProperty> firstRow = new ArrayList<>();
+                    for (int i = 1; i <= n; i++) {
+                        firstRow.add(i - 1, new SimpleStringProperty(rs.getString(i)));
+                    }
+                    data.add(firstRow);
+                }
+                resultsTable.setItems(data);
             }
-            resultsTable.setItems(data);
 
         } catch (SQLException e) {
             Alerter.showAlert(Alert.AlertType.ERROR, runButton.getScene().getWindow(),
