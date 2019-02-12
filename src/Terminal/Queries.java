@@ -43,7 +43,7 @@ public class Queries {
                         "  join nexusaccounts n on account_cards.phone_no = n.phone_no\n" +
                         "where card_no = 4611686018427388083;"));
 
-        queries.add(new SQLQuery("Show Tranaction History (Card)",
+        queries.add(new SQLQuery("Show Transaction History (Card)",
                 "select *\n" +
                         "  from transactions\n" +
                         "  where\n" +
@@ -52,7 +52,7 @@ public class Queries {
                         "      where sub_class_primary_key = 4611686018427388083\n" +
                         "    ) in (\"from\", \"to\");\n"));
 
-        queries.add(new SQLQuery("Show Tranaction History (Nexus Account)",
+        queries.add(new SQLQuery("Show Transaction History (Nexus Account)",
                 "select *\n" +
                         "  from transactions\n" +
                         "  where exists\n" +
@@ -66,6 +66,11 @@ public class Queries {
                         "      )\n" +
                         "    );"));
 
+        return queries;
+    }
+
+    public static List<SQLQuery> Functions() {
+        List<SQLQuery> queries = new ArrayList<>();
         return queries;
     }
 }
