@@ -41,7 +41,15 @@ public class QueryViewController implements Initializable {
     @FXML
     public void RunQuery() {
         try {
-            String SQL = codeArea.getText();
+            String SQL = codeArea.getText().trim();
+
+            String[] ss = SQL.split("===");
+            SQL = ss[ss.length-1];
+
+            ss = SQL.split(";");
+            SQL = ss[ss.length-1];
+
+
 
             ResultSet rs = Main.session.SQLQuery(SQL);
             ResultSetMetaData rsmd = rs.getMetaData();
@@ -93,6 +101,17 @@ public class QueryViewController implements Initializable {
                 codeArea.setText(query.SQL);
             });
 
+            complexQuery.getItems().add(hyperlink);
+        }
+    }
+
+    private void addFunction() {
+        for (SQLQuery query: Queries.Functions()) {
+            Hyperlink hyperlink = new Hyperlink();
+            hyperlink.setText(query.Name);
+            hyperlink.setOnAction(e -> {
+                codeArea.setText(query.SQL);
+            });
             complexQuery.getItems().add(hyperlink);
         }
     }
