@@ -29,6 +29,8 @@ public class QueryViewController implements Initializable {
     ListView simpleQuery;
     @FXML
     ListView  complexQuery;
+    @FXML
+    ListView functions;
 
 
     @Override
@@ -36,6 +38,7 @@ public class QueryViewController implements Initializable {
         codeArea.setText("Write SQL here");
         addSimpleQueries();
         addComplexQueries();
+        addFunction();
     }
 
     @FXML
@@ -115,7 +118,7 @@ public class QueryViewController implements Initializable {
             hyperlink.setOnAction(e -> {
                 codeArea.setText(query.SQL);
             });
-            complexQuery.getItems().add(hyperlink);
+            functions.getItems().add(hyperlink);
         }
     }
 }
