@@ -6,7 +6,7 @@ select *
       where sub_class_primary_key in (
         select card_no
         from account_cards
-         where phone_no = '019215151'
+         where phone_no = '01998561074'
         and transaction_method_id in ("from", "to")
       )
     );
