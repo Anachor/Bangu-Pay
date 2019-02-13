@@ -107,12 +107,10 @@ public class UserSession {
         return cards;
     }
 
-    public ResultSet SQLQuery(String SQL) throws SQLException {
+    public PreparedStatement SQLQuery(String SQL) throws SQLException {
         PreparedStatement ps = conn.prepareStatement(SQL);
         System.out.println(ps);
-        ps.execute();
-        ResultSet rs = ps.getResultSet();
-        return rs;
+        return ps;
     }
 
     public static void main(String[] args) throws SQLException {

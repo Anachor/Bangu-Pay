@@ -11,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.text.Text;
 
 import java.net.URL;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -21,8 +22,6 @@ import java.util.ResourceBundle;
 public class QueryViewController implements Initializable {
     @FXML
     TextArea codeArea;
-    @FXML
-    Button runButton;
     @FXML
     TableView<List<StringProperty>> resultsTable;
     @FXML
@@ -44,11 +43,53 @@ public class QueryViewController implements Initializable {
         addTriggers();
     }
 
+    public void executeQuery(String SQL, boolean supress) throws SQLException {
+        SQL = SQL.trim();
+        if (SQL.equals("")) return;
+        PreparedStatement ps = Main.session.SQLQuery(SQL);
+        ps.execute();
+
+        int updates = ps.getUpdateCount();
+        if (updates != -1) {
+            if (supress) return;
+            if (updates == 0) {
+                Alerter.showAlert(Alert.AlertType.INFORMATION, codeArea.getScene().getWindow(),
+                        "Completed", "Operation Successful");
+            } else {
+                Alerter.showAlert(Alert.AlertType.INFORMATION, codeArea.getScene().getWindow(),
+                        "Table Updated", updates + " Rows Updated.");
+            }
+            return;
+        }
+        ResultSet rs = ps.getResultSet();
+
+        ResultSetMetaData rsmd = rs.getMetaData();
+        resultsTable.getColumns().clear();
+
+        int n = rsmd.getColumnCount();
+        for (int i = 1; i <= n; i++) {
+            String name = rsmd.getColumnName(i);
+            TableColumn<List<StringProperty>, String> column = new TableColumn(name);
+            int finalI = i - 1;
+            column.setCellValueFactory(data -> data.getValue().get(finalI));
+            resultsTable.getColumns().add(column);
+        }
+
+        ObservableList<List<StringProperty>> data = FXCollections.observableArrayList();
+        while (rs.next()) {
+            List<StringProperty> firstRow = new ArrayList<>();
+            for (int i = 1; i <= n; i++) {
+                firstRow.add(i - 1, new SimpleStringProperty(rs.getString(i)));
+            }
+            data.add(firstRow);
+        }
+        resultsTable.setItems(data);
+    }
+
     @FXML
-    public void RunQuery() {
+    public void runAll() {
         try {
             String txt = codeArea.getText().trim();
-
 
             String[] ss = txt.split("===");
             txt = ss[ss.length-1];
@@ -56,39 +97,37 @@ public class QueryViewController implements Initializable {
             ss = txt.split(";");
 
             for (String SQL: ss) {
-                SQL = SQL.trim();
-                if (SQL.equals("")) continue;
-                ResultSet rs = Main.session.SQLQuery(SQL);
-                if (rs == null) continue;
-                ResultSetMetaData rsmd = rs.getMetaData();
-                resultsTable.getColumns().clear();
-
-                int n = rsmd.getColumnCount();
-                for (int i = 1; i <= n; i++) {
-                    String name = rsmd.getColumnName(i);
-                    TableColumn<List<StringProperty>, String> column = new TableColumn(name);
-                    int finalI = i - 1;
-                    column.setCellValueFactory(data -> data.getValue().get(finalI));
-                    resultsTable.getColumns().add(column);
-                }
-
-                ObservableList<List<StringProperty>> data = FXCollections.observableArrayList();
-                while (rs.next()) {
-                    List<StringProperty> firstRow = new ArrayList<>();
-                    for (int i = 1; i <= n; i++) {
-                        firstRow.add(i - 1, new SimpleStringProperty(rs.getString(i)));
-                    }
-                    data.add(firstRow);
-                }
-                resultsTable.setItems(data);
+                executeQuery(SQL, false);
             }
 
         } catch (SQLException e) {
-            Alerter.showAlert(Alert.AlertType.ERROR, runButton.getScene().getWindow(),
+            Alerter.showAlert(Alert.AlertType.ERROR, codeArea.getScene().getWindow(),
                     "Invalid SQLQuery", "The given SQL Query is invalid");
             e.printStackTrace();
         }
     }
+
+    @FXML
+    public void runSelected() {
+        try {
+            String txt = codeArea.getSelectedText().trim();
+
+            String[] ss = txt.split("===");
+            txt = ss[ss.length-1];
+
+            ss = txt.split(";");
+
+            for (String SQL: ss) {
+                executeQuery(SQL, false);
+            }
+
+        } catch (SQLException e) {
+            Alerter.showAlert(Alert.AlertType.ERROR, codeArea.getScene().getWindow(),
+                    "Invalid SQLQuery", "The given SQL Query is invalid");
+            e.printStackTrace();
+        }
+    }
+
 
     private void addSimpleQueries() {
         for (SQLQuery query: Queries.getSimpleQueries()) {

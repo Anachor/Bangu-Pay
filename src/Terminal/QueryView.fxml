@@ -11,7 +11,7 @@
 <AnchorPane prefHeight="480.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Terminal.QueryViewController">
    <children>
       <TextArea fx:id="codeArea" layoutX="220.0" layoutY="11.0" prefHeight="236.0" prefWidth="502.0" />
-      <Button fx:id="runButton" layoutX="441.0" layoutY="249.0" mnemonicParsing="false" onAction="#RunQuery" text="Run" />
+      <Button fx:id="runButton" layoutX="513.0" layoutY="249.0" mnemonicParsing="false" onAction="#runAll" text="Run All" />
       <TableView fx:id="resultsTable" layoutX="219.0" layoutY="276.0" prefHeight="204.0" prefWidth="502.0" />
       <Accordion layoutX="14.0" layoutY="11.0" prefHeight="457.0" prefWidth="202.0">
         <panes>
@@ -52,5 +52,6 @@
             </TitledPane>
         </panes>
       </Accordion>
+      <Button fx:id="runButton1" layoutX="369.0" layoutY="249.0" mnemonicParsing="false" onAction="#runSelected" text="Run Selected" />
    </children>
 </AnchorPane>
