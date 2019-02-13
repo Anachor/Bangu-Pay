@@ -11,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.text.Text;
 
 import java.net.URL;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -42,11 +43,26 @@ public class QueryViewController implements Initializable {
         addTriggers();
     }
 
-    public void executeQuery(String SQL) throws SQLException {
+    public void executeQuery(String SQL, boolean supress) throws SQLException {
         SQL = SQL.trim();
         if (SQL.equals("")) return;
-        ResultSet rs = Main.session.SQLQuery(SQL);
-        if (rs == null) return;
+        PreparedStatement ps = Main.session.SQLQuery(SQL);
+        ps.execute();
+
+        int updates = ps.getUpdateCount();
+        if (updates != -1) {
+            if (supress) return;
+            if (updates == 0) {
+                Alerter.showAlert(Alert.AlertType.INFORMATION, codeArea.getScene().getWindow(),
+                        "Completed", "Operation Successful");
+            } else {
+                Alerter.showAlert(Alert.AlertType.INFORMATION, codeArea.getScene().getWindow(),
+                        "Table Updated", updates + " Rows Updated.");
+            }
+            return;
+        }
+        ResultSet rs = ps.getResultSet();
+
         ResultSetMetaData rsmd = rs.getMetaData();
         resultsTable.getColumns().clear();
 
@@ -81,7 +97,7 @@ public class QueryViewController implements Initializable {
             ss = txt.split(";");
 
             for (String SQL: ss) {
-               executeQuery(SQL);
+                executeQuery(SQL, false);
             }
 
         } catch (SQLException e) {
@@ -102,7 +118,7 @@ public class QueryViewController implements Initializable {
             ss = txt.split(";");
 
             for (String SQL: ss) {
-                executeQuery(SQL);
+                executeQuery(SQL, false);
             }
 
         } catch (SQLException e) {
