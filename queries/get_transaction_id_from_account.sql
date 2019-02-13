@@ -21,3 +21,4 @@ end;$BODY$;
 ALTER FUNCTION public.get_transaction_method_id_of_account(bigint)
     OWNER TO postgres;
 ===
+select get_transaction_method_id_of_account(315);
